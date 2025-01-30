@@ -20,14 +20,32 @@ model Account {
     @@map("accounts")
 }
 
+model Product {
+    id           String        @id @default(uuid())
+    title        String
+    description  String
+    price        Int
+    installments Int
+    type         ProductStatus
+    active       Boolean
+}
+
+enum ProductStatus {
+    MONTH
+    YEAR
+}
+
 model Subscribe {
-    id        String          @id @default(uuid())
-    status    SubscribeStatus @default(PENDING)
-    createdAt DateTime        @default(now()) @map("created_at")
-    expiredAt DateTime        @map("expired_at")
-    updatedAt DateTime        @updatedAt @map("updated_at")
-    accountId String          @map("account_id")
-    account   Account         @relation(fields: [accountId], references: [id])
+    id                     String                   @id @default(uuid())
+    status                 SubscribeStatus          @default(PENDING)
+    createdAt              DateTime                 @default(now()) @map("created_at")
+    expiredAt              DateTime                 @map("expired_at")
+    updatedAt              DateTime                 @updatedAt @map("updated_at")
+    accountId              String                   @map("account_id")
+    account                Account                  @relation(fields: [accountId], references: [id])
+    Payment                Payment[]
+    MercadoPagoPreferences MercadoPagoPreferences[]
+    MercadoPagoPayment     MercadoPagoPayment[]
 
     @@index([accountId])
     @@map("subscribes")
@@ -40,14 +58,33 @@ enum SubscribeStatus {
     EXPIRED
 }
 
+model MercadoPagoPreferences {
+    id          String    @id
+    subscribeId String    @map("subscribe_id")
+    subscribe   Subscribe @relation(fields: [subscribeId], references: [id])
+
+    @@map("mercadopago_preferences")
+}
+
+model MercadoPagoPayment {
+    id          String    @id
+    subscribeId String    @map("subscribe_id")
+    subscribe   Subscribe @relation(fields: [subscribeId], references: [id])
+
+    @@map("mercadopago_payment")
+}
+
 model Payment {
-    id         String        @id @default(uuid())
-    status     PaymentStatus @default(PENDING)
-    createdAt  DateTime      @default(now()) @map("created_at")
-    approvedAt DateTime?     @map("approved_at")
-    updatedAt  DateTime      @updatedAt @map("updated_at")
-    accountId  String        @map("account_id")
-    account    Account       @relation(fields: [accountId], references: [id])
+    id          String        @id @default(uuid())
+    status      PaymentStatus @default(PENDING)
+    price       Int
+    createdAt   DateTime      @default(now()) @map("created_at")
+    approvedAt  DateTime?     @map("approved_at")
+    updatedAt   DateTime      @updatedAt @map("updated_at")
+    accountId   String        @map("account_id")
+    account     Account       @relation(fields: [accountId], references: [id])
+    subscribeId String        @map("subscribe_id")
+    subscribe   Subscribe     @relation(fields: [subscribeId], references: [id])
 
     @@index([accountId])
     @@map("payments")
