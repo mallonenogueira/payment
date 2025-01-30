@@ -28,6 +28,7 @@ model Product {
     installments Int
     type         ProductStatus
     active       Boolean
+    Subscribe    Subscribe[]
 }
 
 enum ProductStatus {
@@ -37,12 +38,15 @@ enum ProductStatus {
 
 model Subscribe {
     id                     String                   @id @default(uuid())
+    price                  Int
     status                 SubscribeStatus          @default(PENDING)
     createdAt              DateTime                 @default(now()) @map("created_at")
     expiredAt              DateTime                 @map("expired_at")
     updatedAt              DateTime                 @updatedAt @map("updated_at")
     accountId              String                   @map("account_id")
     account                Account                  @relation(fields: [accountId], references: [id])
+    productId              String                   @map("product_id")
+    product                Product                  @relation(fields: [productId], references: [id])
     Payment                Payment[]
     MercadoPagoPreferences MercadoPagoPreferences[]
     MercadoPagoPayment     MercadoPagoPayment[]
