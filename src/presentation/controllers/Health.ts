@@ -6,6 +6,6 @@ export class HealthController {
   }
 
   health() {
-    return { ok: true };
+    return { ok: true, status: 200 };
   }
 }

@@ -1,0 +1,61 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Account {
+    id        String      @id @default(uuid())
+    email     String      @unique
+    name      String
+    document  String
+    createdAt DateTime    @default(now()) @map("created_at")
+    updatedAt DateTime    @updatedAt @map("updated_at")
+    Subscribe Subscribe[]
+    Payment   Payment[]
+
+    @@map("accounts")
+}
+
+model Subscribe {
+    id        String          @id @default(uuid())
+    status    SubscribeStatus @default(PENDING)
+    createdAt DateTime        @default(now()) @map("created_at")
+    expiredAt DateTime        @map("expired_at")
+    updatedAt DateTime        @updatedAt @map("updated_at")
+    accountId String          @map("account_id")
+    account   Account         @relation(fields: [accountId], references: [id])
+
+    @@index([accountId])
+    @@map("subscribes")
+}
+
+enum SubscribeStatus {
+    PENDING
+    APPROVED
+    CANCELED
+    EXPIRED
+}
+
+model Payment {
+    id         String        @id @default(uuid())
+    status     PaymentStatus @default(PENDING)
+    createdAt  DateTime      @default(now()) @map("created_at")
+    approvedAt DateTime?     @map("approved_at")
+    updatedAt  DateTime      @updatedAt @map("updated_at")
+    accountId  String        @map("account_id")
+    account    Account       @relation(fields: [accountId], references: [id])
+
+    @@index([accountId])
+    @@map("payments")
+}
+
+enum PaymentStatus {
+    PENDING
+    APPROVED
+    CANCELED
+    EXPIRED
+}
