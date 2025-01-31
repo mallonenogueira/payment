@@ -44,7 +44,7 @@ model Subscribe {
     status                 SubscribeStatus          @default(CREATED)
     createdAt              DateTime                 @default(now()) @map("created_at")
     updatedAt              DateTime                 @updatedAt @map("updated_at")
-    expiredAt              DateTime                 @map("expired_at")
+    expiredAt              DateTime?                @map("expired_at")
     accountId              String                   @map("account_id")
     account                Account                  @relation(fields: [accountId], references: [id])
     productId              String                   @map("product_id")

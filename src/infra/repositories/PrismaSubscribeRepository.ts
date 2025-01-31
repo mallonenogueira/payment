@@ -28,7 +28,7 @@ export class PrismaSubscribeRepository implements SubscribeRepository {
       subs.productId,
       subs.createdAt,
       subs.updatedAt,
-      subs.expiredAt
+      subs.expiredAt ?? undefined
     );
   }
 

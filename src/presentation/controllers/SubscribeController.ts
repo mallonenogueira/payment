@@ -10,17 +10,17 @@ export class SubscribeController {
   constructor(
     server: HttpServer,
     private createSubscribeUseCase: CreateSubscribeUseCase,
-    private createPaymentLinkUseCase: CreatePaymentLinkUseCase,
+    private createPaymentLinkUseCase: CreatePaymentLinkUseCase
   ) {
     server.post("/subscribe", this.create.bind(this));
     server.post("/subscribe/:id/link", this.createPaymentLink.bind(this));
+    server.post("/subscribe/:id/notification", this.paymentNotification.bind(this));
   }
 
   async create(ctx: HttpContext) {
     return this.createSubscribeUseCase
       .execute({
         accountId: ctx.body.accountId,
-        expiredAt: new Date(ctx.body.expiredAt),
         productId: ctx.body.productId,
       })
       .then(HttpResponseResolver.created);
@@ -28,7 +28,11 @@ export class SubscribeController {
 
   async createPaymentLink(ctx: HttpContext) {
     return this.createPaymentLinkUseCase.execute({
-      subscribeId: ctx.params.id
+      subscribeId: ctx.params.id,
     });
+  }
+
+  async paymentNotification(ctx: HttpContext) {
+    console.log(ctx);
   }
 }

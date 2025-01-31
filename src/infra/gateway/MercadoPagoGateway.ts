@@ -15,7 +15,8 @@ export class MercadoPagoGateway implements PaymentGateway {
       success: "https://desenv.mallone.dev",
       failure: "https://desenv.mallone.dev",
       pending: "https://desenv.mallone.dev",
-    }
+    },
+    private notificationUrl = "https://desenv.mallone.dev/api/subscribe/:id/notification"
   ) {}
 
   async createPaymnetUrl(
@@ -28,11 +29,17 @@ export class MercadoPagoGateway implements PaymentGateway {
         auto_return: "all",
         external_reference: input.subscribeId,
         back_urls: this.backUrls,
+        notification_url: this.notificationUrl.replace(
+          ":id",
+          input.subscribeId
+        ),
+        //additional_info: 'Discount 12,00'
+        statement_descriptor: input.product.title, // Cartão de crédito
         items: [
           {
             category_id: "virtual_goods",
             id: input.product.id,
-            title: "Assinatura mensal",
+            title: input.product.title,
             quantity: 1,
             unit_price: input.product.price,
             currency_id: "BRL",
@@ -56,7 +63,7 @@ export class MercadoPagoGateway implements PaymentGateway {
     });
 
     if (!preferenceResponse.id || !preferenceResponse.init_point) {
-        throw new Error('Erro ao gerar Link mercado pago.');
+      throw new Error("Erro ao gerar Link mercado pago.");
     }
 
     return {

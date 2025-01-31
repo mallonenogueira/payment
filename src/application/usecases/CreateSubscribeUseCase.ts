@@ -24,7 +24,6 @@ export class CreateSubscribeUseCase {
       product.price,
       input.accountId,
       product.id,
-      input.expiredAt
     );
 
     await this.subscribeRepository.create(subscribe);
@@ -34,7 +33,6 @@ export class CreateSubscribeUseCase {
       price: subscribe.price,
       accountId: subscribe.accountId,
       productId: subscribe.productId,
-      expiredAt: subscribe.expiredAt,
       status: subscribe.status,
     };
   }
@@ -43,7 +41,6 @@ export class CreateSubscribeUseCase {
 export interface SubscribeInput {
   readonly accountId: string;
   readonly productId: string;
-  readonly expiredAt: Date;
 }
 
 export interface SubscribeOutput {
@@ -51,6 +48,5 @@ export interface SubscribeOutput {
   readonly price: number;
   readonly accountId: string;
   readonly productId: string;
-  readonly expiredAt: Date;
   readonly status: SubscribeStatus;
 }

@@ -18,22 +18,12 @@ export class Subscribe {
     readonly productId: string,
     readonly createdAt: Date,
     readonly updatedAt: Date,
-    readonly expiredAt: Date
+    readonly expiredAt?: Date
   ) {}
 
-  static create(
-    price: number,
-    accountId: string,
-    productId: string,
-    expiredAt: Date
-  ) {
-    if (!price || !accountId || !productId || !expiredAt) {
-      throw new EntityMissingParams([
-        "price",
-        "accountId",
-        "productId",
-        "expiredAt",
-      ]);
+  static create(price: number, accountId: string, productId: string) {
+    if (!price || !accountId || !productId) {
+      throw new EntityMissingParams(["price", "accountId", "productId"]);
     }
 
     const now = new Date();
@@ -49,8 +39,7 @@ export class Subscribe {
       accountId,
       productId,
       createdAt,
-      updatedAt,
-      expiredAt
+      updatedAt
     );
   }
 }

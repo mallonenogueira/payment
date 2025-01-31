@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Status pagamento</title>
+  </head>
+  <body>
+    <h1>Mallone</h1>
+
+    <button onclick="gerarPedido()">Gerar pedido</button>
+
+    <div id="wallet_container"></div>
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <script>
+      function gerarPedido() {
+        const mp = new MercadoPago(
+          "APP_USR-5cb731b2-acb7-4762-ae86-624ebf5045a8",
+          {
+            locale: "pt-BR",
+          }
+        );
+
+        fetch("/api/subscribe", {
+          method: "POST",
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            mp.bricks().create("wallet", "wallet_container", {
+              initialization: {
+                preferenceId: data.id,
+              },
+            });
+          });
+      }
+    </script>
+  </body>
+</html>
