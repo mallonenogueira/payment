@@ -1,7 +1,7 @@
 import { EntityMissingParams } from "../errors/EntityMissingParams";
 import { Id } from "../value-objects/Id";
 
-enum SubscribeStatus {
+export enum SubscribeStatus {
   CREATED = "CREATED",
   PENDING = "PENDING",
   APPROVED = "APPROVED",
