@@ -21,17 +21,19 @@ model Account {
 }
 
 model Product {
-    id           String        @id @default(uuid())
+    id           String      @id @default(uuid())
     title        String
     description  String
     price        Int
     installments Int
-    type         ProductStatus
+    type         ProductType
     active       Boolean
+    createdAt    DateTime    @default(now()) @map("created_at")
+    updatedAt    DateTime    @updatedAt @map("updated_at")
     Subscribe    Subscribe[]
 }
 
-enum ProductStatus {
+enum ProductType {
     MONTH
     YEAR
 }
@@ -39,10 +41,10 @@ enum ProductStatus {
 model Subscribe {
     id                     String                   @id @default(uuid())
     price                  Int
-    status                 SubscribeStatus          @default(PENDING)
+    status                 SubscribeStatus          @default(CREATED)
     createdAt              DateTime                 @default(now()) @map("created_at")
-    expiredAt              DateTime                 @map("expired_at")
     updatedAt              DateTime                 @updatedAt @map("updated_at")
+    expiredAt              DateTime                 @map("expired_at")
     accountId              String                   @map("account_id")
     account                Account                  @relation(fields: [accountId], references: [id])
     productId              String                   @map("product_id")
@@ -56,6 +58,7 @@ model Subscribe {
 }
 
 enum SubscribeStatus {
+    CREATED
     PENDING
     APPROVED
     CANCELED
@@ -66,6 +69,7 @@ model MercadoPagoPreferences {
     id          String    @id
     subscribeId String    @map("subscribe_id")
     subscribe   Subscribe @relation(fields: [subscribeId], references: [id])
+    createdAt   DateTime  @default(now()) @map("created_at")
 
     @@map("mercadopago_preferences")
 }
@@ -74,6 +78,7 @@ model MercadoPagoPayment {
     id          String    @id
     subscribeId String    @map("subscribe_id")
     subscribe   Subscribe @relation(fields: [subscribeId], references: [id])
+    createdAt   DateTime  @default(now()) @map("created_at")
 
     @@map("mercadopago_payment")
 }

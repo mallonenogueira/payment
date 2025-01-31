@@ -2,6 +2,8 @@ services:
   reverse-proxy:
     container_name: reverse-proxy
     image: nginx:alpine
+    depends_on:
+      - backend
     ports:
       - 80:80
       - 443:443
@@ -13,10 +15,24 @@ services:
       - ./frontend:/usr/share/nginx/html
     restart: unless-stopped
 
+  database:
+    container_name: database
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
 
   backend:
     container_name: backend
-    image: node:alpine
+    image: node
+    depends_on: 
+      - database
     working_dir: /app
     volumes:
       - .:/app
@@ -25,3 +41,6 @@ services:
     command: ["npm", "run", "dev"]
     environment:
       - NODE_ENV=development
+
+volumes:
+  db_data:
