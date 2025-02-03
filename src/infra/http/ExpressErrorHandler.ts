@@ -5,32 +5,41 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import express from "express";
 
 export function expressErrorHandler(
-  error: Error,
+  error: any,
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ) {
-  if (error instanceof ValidationError) {
+  if (
+    error instanceof ValidationError ||
+    ("type" in error && error.type === ValidationError.type)
+  ) {
     return res.status(400).send({
       statusCode: 400,
-      type: "ValidationError",
+      type: ValidationError.type,
       message: error.message,
     });
   }
 
-  if (error instanceof EntityNotFound) {
+  if (
+    error instanceof EntityNotFound ||
+    ("type" in error && error.type === EntityNotFound.type)
+  ) {
     return res.status(404).send({
       statusCode: 404,
-      type: "EntityNotFound",
+      type: EntityNotFound.type,
       message: error.message + error.entity,
       entity: error.entity,
     });
   }
 
-  if (error instanceof EntityMissingParams) {
+  if (
+    error instanceof EntityMissingParams ||
+    ("type" in error && error.type === EntityMissingParams.type)
+  ) {
     return res.status(400).send({
       statusCode: 400,
-      type: "EntityMissingParams",
+      type: EntityMissingParams.type,
       message: error.message,
       params: error.params,
     });
@@ -49,20 +58,18 @@ export function expressErrorHandler(
     });
   }
 
-  if (error instanceof PrismaClientKnownRequestError) { 
-    // https://www.prisma.io/docs/orm/reference/error-reference#error-codes
-    console.error(error);
+  console.error(error);
 
+  if (error instanceof PrismaClientKnownRequestError) {
+    // https://www.prisma.io/docs/orm/reference/error-reference#error-codes
     return res.status(400).send({
       statusCode: 400,
-      type: "ClientError",
+      type: "PCKRQClientError",
       message: "Erro ao realizar operação.",
       modelName: error?.meta?.modelName,
       code: error.code,
     });
   }
-
-  console.error(error);
 
   res.status(500).send({
     statusCode: 500,

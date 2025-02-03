@@ -1,5 +1,7 @@
 export class EntityNotFound extends Error {
-  entity: string;
+  static readonly type = 'EntityNotFound';
+  readonly type = EntityNotFound.type;
+  readonly entity: string;
 
   constructor(entity: string) {
     super("Entidade não encontrada:");
