@@ -1,7 +1,7 @@
 import { PaymentStatus } from "@/domain/entities/Payment";
 
 export interface CreatePaymentInput {
-  subscribeId: string;
+  subscriptionId: string;
   installments: number;
   product: {
     id: string;
@@ -32,7 +32,7 @@ export interface GetPaymentOutput {
   createdAt: Date;
   updatedAt?: Date | null;
   aprrovedAt?: Date | null;
-  subscribeId: string;
+  subscriptionId: string;
   gatewayId?: string | null;
 }
 

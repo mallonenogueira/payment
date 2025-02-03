@@ -1,25 +1,25 @@
 import { ProductRepository } from "../repositories/ProductRepository";
-import { SubscribeRepository } from "../repositories/SubscribeRepository";
+import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 import { PaymentRepository } from "../repositories/PaymentRepository";
 import { Payment, PaymentStatus } from "@/domain/entities/Payment";
 
 export class ProcessPaymentUseCase {
   constructor(
-    private subscribeRepository: SubscribeRepository,
+    private subscriptionRepository: SubscriptionRepository,
     private productRepository: ProductRepository,
     private paymentRepository: PaymentRepository
   ) {}
 
-  async execute(input: ApproveSubscribeInput): Promise<void> {
-    const subscribe = await this.subscribeRepository.findById(
-      input.subscribeId
+  async execute(input: ApproveSubscriptionInput): Promise<void> {
+    const subscription = await this.subscriptionRepository.findById(
+      input.subscriptionId
     );
 
-    if (!subscribe) {
+    if (!subscription) {
       throw new Error("Inscrição não encontada.");
     }
 
-    const product = await this.productRepository.findById(subscribe.productId);
+    const product = await this.productRepository.findById(subscription.productId);
 
     if (!product) {
       throw new Error("Produto não encontrado.");
@@ -29,8 +29,8 @@ export class ProcessPaymentUseCase {
       input.amount,
       input.installments,
       input.status,
-      subscribe.accountId,
-      input.subscribeId,
+      subscription.accountId,
+      input.subscriptionId,
       input.createdAt,
       input.updatedAt ?? undefined,
       input.aprrovedAt ?? undefined,
@@ -41,13 +41,13 @@ export class ProcessPaymentUseCase {
     this.paymentRepository.create(payment);
 
     if (payment.status === PaymentStatus.APPROVED) {
-      subscribe.approve(product.type);
-      this.subscribeRepository.update(subscribe);
+      subscription.approve(product.type);
+      this.subscriptionRepository.update(subscription);
     }
   }
 }
 
-export interface ApproveSubscribeInput {
+export interface ApproveSubscriptionInput {
   gateway: "MERCADO_PAGO";
   installments: number;
   status: PaymentStatus;
@@ -55,6 +55,6 @@ export interface ApproveSubscribeInput {
   createdAt: Date;
   updatedAt?: Date | null;
   aprrovedAt?: Date | null;
-  subscribeId: string;
+  subscriptionId: string;
   gatewayId?: string | null;
 }

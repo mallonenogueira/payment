@@ -3,21 +3,21 @@ import {
   HttpResponseResolver,
   HttpServer,
 } from "@/infra/http/HttpServer";
-import { CreateSubscribeUseCase } from "@/application/usecases/CreateSubscribeUseCase";
+import { CreateSubscriptionUseCase } from "@/application/usecases/CreateSubscriptionUseCase";
 import { CreatePaymentLinkUseCase } from "@/application/usecases/CreatePaymentLinkUseCase";
 
-export class SubscribeController {
+export class SubscriptionController {
   constructor(
     server: HttpServer,
-    private createSubscribeUseCase: CreateSubscribeUseCase,
+    private createSubscriptionUseCase: CreateSubscriptionUseCase,
     private createPaymentLinkUseCase: CreatePaymentLinkUseCase
   ) {
-    server.post("/subscribe", this.create.bind(this));
-    server.post("/subscribe/:id/link", this.createPaymentLink.bind(this));
+    server.post("/subscription", this.create.bind(this));
+    server.post("/subscription/:id/link", this.createPaymentLink.bind(this));
   }
 
   async create(ctx: HttpContext) {
-    return this.createSubscribeUseCase
+    return this.createSubscriptionUseCase
       .execute({
         accountId: ctx.body.accountId,
         productId: ctx.body.productId,
@@ -27,7 +27,7 @@ export class SubscribeController {
 
   async createPaymentLink(ctx: HttpContext) {
     return this.createPaymentLinkUseCase.execute({
-      subscribeId: ctx.params.id,
+      subscriptionId: ctx.params.id,
     });
   }
 }

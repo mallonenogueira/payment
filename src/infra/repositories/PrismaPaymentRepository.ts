@@ -24,7 +24,7 @@ export class PrismaPaymentRepository implements PaymentRepository {
       payment.installments,
       mapStatus[payment.status],
       payment.accountId,
-      payment.subscribeId,
+      payment.subscriptionId,
       payment.createdAt,
       payment.updatedAt,
       payment.approvedAt ?? undefined,

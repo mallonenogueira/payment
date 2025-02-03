@@ -2,7 +2,7 @@ import { EntityMissingParams } from "../errors/EntityMissingParams";
 import { Id } from "../value-objects/Id";
 import { ProductType } from "./Product";
 
-export enum SubscribeStatus {
+export enum SubscriptionStatus {
   CREATED = "CREATED",
   PENDING = "PENDING",
   APPROVED = "APPROVED",
@@ -10,11 +10,11 @@ export enum SubscribeStatus {
   EXPIRED = "EXPIRED",
 }
 
-export class Subscribe {
+export class Subscription {
   constructor(
     readonly id: string,
     readonly price: number,
-    public status: SubscribeStatus,
+    public status: SubscriptionStatus,
     readonly accountId: string,
     readonly productId: string,
     readonly createdAt: Date,
@@ -31,10 +31,10 @@ export class Subscribe {
     const createdAt = now;
     const updatedAt = now;
 
-    return new Subscribe(
+    return new Subscription(
       Id.createString(),
       price,
-      SubscribeStatus.CREATED,
+      SubscriptionStatus.CREATED,
       accountId,
       productId,
       createdAt,
@@ -44,14 +44,14 @@ export class Subscribe {
 
   approve(productType?: ProductType) {
     switch (this.status) {
-      case SubscribeStatus.APPROVED:
-        throw new Error("Subscribe already approved.");
-      case SubscribeStatus.CANCELED:
-      case SubscribeStatus.EXPIRED:
-        throw new Error("Subscribe can not be approved.");
+      case SubscriptionStatus.APPROVED:
+        throw new Error("Subscription already approved.");
+      case SubscriptionStatus.CANCELED:
+      case SubscriptionStatus.EXPIRED:
+        throw new Error("Subscription can not be approved.");
       default:
         this.updatedAt = new Date();
-        this.status = SubscribeStatus.APPROVED;
+        this.status = SubscriptionStatus.APPROVED;
         this.expiredAt = this.getExpirationDate(productType);
     }
   }

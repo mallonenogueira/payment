@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "95747c64-4f8a-4e34-a99b-cdb5de96e56f",
+		"name": "Mallone-Payment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37301641"
+	},
+	"item": [
+		{
+			"name": "/product",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/product",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Assinatura mensal\",\r\n    \"description\": \"Aqui uma descrição da assinatura mensal.\",\r\n    \"price\": 200,\r\n    \"type\": \"MONTH\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/account",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Nome da conta - Empresa1\",\r\n    \"document\": \"444444444441\",\r\n    \"email\": \"testepayment5@mailsac.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/account/:id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Nome da conta - Empresa\",\r\n    \"document\": \"44444444444\",\r\n    \"email\": \"testepayment@mailsac.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/account/e15186a7-3d5a-4597-9b1b-72bb248a313d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"account",
+						"e15186a7-3d5a-4597-9b1b-72bb248a313d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/account/:id/subscribe",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Nome da conta - Empresa\",\r\n    \"document\": \"44444444444\",\r\n    \"email\": \"testepayment@mailsac.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/account/9f9baee0-b4a6-4569-9a93-7a89dc8abfda/subscription",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"account",
+						"9f9baee0-b4a6-4569-9a93-7a89dc8abfda",
+						"subscription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/account",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/subscription",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"accountId\": \"9f9baee0-b4a6-4569-9a93-7a89dc8abfda\",\r\n    \"productId\": \"67427388-cd2e-4d5a-acd0-c277daf6ef30\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/subscription",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"subscription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/subscription/:id/link",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/subscription/020dcb8e-f4d0-4719-8fb6-e4dee34eeba4/link",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"subscription",
+						"020dcb8e-f4d0-4719-8fb6-e4dee34eeba4",
+						"link"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/mercadopago/webhooks",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action\": \"payment.created\",\r\n    \"api_version\": \"v1\",\r\n    \"data\": {\r\n        \"id\": \"101178463334\"\r\n    },\r\n    \"date_created\": \"2025-02-03T14: 57: 48Z\",\r\n    \"id\": 118924368760,\r\n    \"live_mode\": true,\r\n    \"type\": \"payment\",\r\n    \"user_id\": \"2219611008\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://desenv.mallone.dev/api/mercadopago/webhooks",
+					"protocol": "https",
+					"host": [
+						"desenv",
+						"mallone",
+						"dev"
+					],
+					"path": [
+						"api",
+						"mercadopago",
+						"webhooks"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

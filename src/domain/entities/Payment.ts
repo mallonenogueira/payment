@@ -14,7 +14,7 @@ export class Payment {
     readonly installments: number,
     readonly status: PaymentStatus,
     readonly accountId: string,
-    readonly subscribeId: string,
+    readonly subscriptionId: string,
     readonly createdAt: Date,
     readonly updatedAt?: Date,
     readonly approvedAt?: Date,
@@ -27,7 +27,7 @@ export class Payment {
     installments: number,
     status: PaymentStatus,
     accountId: string,
-    subscribeId: string,
+    subscriptionId: string,
     createdAt: Date,
     updatedAt?: Date,
     approvedAt?: Date,
@@ -39,7 +39,7 @@ export class Payment {
       !installments ||
       !status ||
       !accountId ||
-      !subscribeId ||
+      !subscriptionId ||
       !createdAt
     ) {
       throw new EntityMissingParams([
@@ -47,7 +47,7 @@ export class Payment {
         "installments",
         "status",
         "accountId",
-        "subscribeId",
+        "subscriptionId",
         "createdAt",
       ]);
     }
@@ -58,7 +58,7 @@ export class Payment {
       installments,
       status,
       accountId,
-      subscribeId,
+      subscriptionId,
       createdAt,
       updatedAt,
       approvedAt,

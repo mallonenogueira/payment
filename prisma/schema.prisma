@@ -14,7 +14,7 @@ model Account {
     document  String
     createdAt DateTime    @default(now()) @map("created_at")
     updatedAt DateTime    @updatedAt @map("updated_at")
-    Subscribe Subscribe[]
+    Subscription Subscription[]
     Payment   Payment[]
 
     @@map("accounts")
@@ -30,7 +30,9 @@ model Product {
     active       Boolean
     createdAt    DateTime    @default(now()) @map("created_at")
     updatedAt    DateTime    @updatedAt @map("updated_at")
-    Subscribe    Subscribe[]
+    Subscription    Subscription[]
+    
+    @@map("products")
 }
 
 enum ProductType {
@@ -38,10 +40,10 @@ enum ProductType {
     YEAR
 }
 
-model Subscribe {
+model Subscription {
     id        String          @id @default(uuid())
     price     Int
-    status    SubscribeStatus @default(CREATED)
+    status    SubscriptionStatus @default(CREATED)
     createdAt DateTime        @default(now()) @map("created_at")
     updatedAt DateTime        @updatedAt @map("updated_at")
     expiredAt DateTime?       @map("expired_at")
@@ -52,10 +54,10 @@ model Subscribe {
     Payment   Payment[]
 
     @@index([accountId])
-    @@map("subscribes")
+    @@map("subscriptions")
 }
 
-enum SubscribeStatus {
+enum SubscriptionStatus {
     CREATED
     PENDING
     APPROVED
@@ -75,8 +77,8 @@ model Payment {
     updatedAt    DateTime      @updatedAt @map("updated_at")
     accountId    String        @map("account_id")
     account      Account       @relation(fields: [accountId], references: [id])
-    subscribeId  String        @map("subscribe_id")
-    subscribe    Subscribe     @relation(fields: [subscribeId], references: [id])
+    subscriptionId  String        @map("subscription_id")
+    subscription    Subscription     @relation(fields: [subscriptionId], references: [id])
 
     @@index([accountId])
     @@map("payments")

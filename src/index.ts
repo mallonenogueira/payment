@@ -3,10 +3,10 @@ import "dotenv/config";
 import { env } from "@/infra/configuration/env";
 import { ExpressServer } from "@/infra/http/ExpressHttpServer";
 import { HealthController } from "@/presentation/controllers/HealthController";
-import { SubscribeController } from "@/presentation/controllers/SubscribeController";
-import { CreateSubscribeUseCase } from "@/application/usecases/CreateSubscribeUseCase";
+import { SubscriptionController } from "@/presentation/controllers/SubscriptionController";
+import { CreateSubscriptionUseCase } from "@/application/usecases/CreateSubscriptionUseCase";
 import { PrismaProductRepository } from "@/infra/repositories/PrismaProductRepository";
-import { PrismaSubscribeRepository } from "@/infra/repositories/PrismaSubscribeRepository";
+import { PrismaSubscriptionRepository } from "@/infra/repositories/PrismaSubscriptionRepository";
 import { PrismaAccountRepository } from "@/infra/repositories/PrismaAccountRepository";
 import { CreateAccountUseCase } from "@/application/usecases/CreateAccountUseCase";
 import { AccountController } from "@/presentation/controllers/AccountController";
@@ -27,23 +27,23 @@ function start() {
 
   const paymentRepository = new PrismaPaymentRepository();
   const productRepository = new PrismaProductRepository();
-  const subscribeRepository = new PrismaSubscribeRepository();
+  const subscriptionRepository = new PrismaSubscriptionRepository();
   const accountRepository = new PrismaAccountRepository();
 
-  const createSubscribeUseCase = new CreateSubscribeUseCase(
-    subscribeRepository,
+  const createSubscriptionUseCase = new CreateSubscriptionUseCase(
+    subscriptionRepository,
     productRepository
   );
   const createAccountUseCase = new CreateAccountUseCase(accountRepository, mailService);
   const createProductUseCase = new CreateProductUseCase(productRepository);
   const createPaymentLinkUseCase = new CreatePaymentLinkUseCase(
-    subscribeRepository,
+    subscriptionRepository,
     productRepository,
     accountRepository,
     mercadoPagoGateway
   );
   const processPaymentUseCase = new ProcessPaymentUseCase(
-    subscribeRepository,
+    subscriptionRepository,
     productRepository,
     paymentRepository
   );
@@ -53,12 +53,12 @@ function start() {
     server,
     createAccountUseCase,
     accountRepository,
-    subscribeRepository
+    subscriptionRepository
   );
   new ProductController(server, createProductUseCase, productRepository);
-  new SubscribeController(
+  new SubscriptionController(
     server,
-    createSubscribeUseCase,
+    createSubscriptionUseCase,
     createPaymentLinkUseCase
   );
   new MercadoPagoController(server, mercadoPagoGateway, processPaymentUseCase);

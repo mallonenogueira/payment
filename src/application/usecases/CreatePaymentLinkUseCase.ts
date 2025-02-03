@@ -1,11 +1,11 @@
 import { ProductRepository } from "../repositories/ProductRepository";
 import { PaymentGateway } from "../gateway/PaymentGateWay";
 import { AccountRepository } from "../repositories/AccountRepository";
-import { SubscribeRepository } from "../repositories/SubscribeRepository";
+import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 
 export class CreatePaymentLinkUseCase {
   constructor(
-    private subscribeRepository: SubscribeRepository,
+    private subscriptionRepository: SubscriptionRepository,
     private productRepository: ProductRepository,
     private accountRepository: AccountRepository,
     private paymentGateway: PaymentGateway
@@ -14,14 +14,14 @@ export class CreatePaymentLinkUseCase {
   async execute(
     input: CreatePaymentLinkInput
   ): Promise<CreatePaymentLinkOutput> {
-    const subscribe = await this.subscribeRepository.findById(input.subscribeId);
+    const subscription = await this.subscriptionRepository.findById(input.subscriptionId);
     
-    if (!subscribe) {
+    if (!subscription) {
       throw new Error("Inscrição não encontada.");
     }
     
-    const product = await this.productRepository.findById(subscribe.productId);
-    const account = await this.accountRepository.findById(subscribe.accountId);
+    const product = await this.productRepository.findById(subscription.productId);
+    const account = await this.accountRepository.findById(subscription.accountId);
 
     if (!account) {
       throw new Error("Conta não encontada.");
@@ -40,10 +40,10 @@ export class CreatePaymentLinkUseCase {
       installments: product.installments,
       product: {
         id: product.id,
-        price: subscribe.price,
+        price: subscription.price,
         title: product.title,
       },
-      subscribeId: subscribe.id,
+      subscriptionId: subscription.id,
     });
 
     return paymentUrl;
@@ -51,7 +51,7 @@ export class CreatePaymentLinkUseCase {
 }
 
 export interface CreatePaymentLinkInput {
-  readonly subscribeId: string;
+  readonly subscriptionId: string;
 }
 
 export interface CreatePaymentLinkOutput {

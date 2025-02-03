@@ -30,7 +30,7 @@ export class MercadoPagoGateway implements PaymentGateway {
     const preferenceResponse = await preference.create({
       body: {
         auto_return: "all",
-        external_reference: input.subscribeId,
+        external_reference: input.subscriptionId,
         back_urls: this.backUrls,
         //additional_info: 'Discount 12,00'
         statement_descriptor: input.product.title, // Aparece no cartão de crédito
@@ -88,7 +88,7 @@ export class MercadoPagoGateway implements PaymentGateway {
       aprrovedAt: payment.date_approved
         ? new Date(payment.date_approved)
         : null,
-      subscribeId: payment.external_reference ?? Id.createString(),
+      subscriptionId: payment.external_reference ?? Id.createString(),
       gatewayId: payment.id ? String(payment.id) : null,
     };
   }
