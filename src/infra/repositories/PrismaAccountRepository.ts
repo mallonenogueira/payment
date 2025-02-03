@@ -1,7 +1,6 @@
 import { Account } from "@/domain/entities/Account";
 import { AccountRepository } from "@/application/repositories/AccountRepository";
 import { prisma } from "./PrismaClient";
-import { EntityNotFound } from "@/domain/errors/EntityNotFound";
 
 export class PrismaAccountRepository implements AccountRepository {
   async create(account: Account): Promise<void> {

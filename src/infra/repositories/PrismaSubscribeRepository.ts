@@ -32,9 +32,44 @@ export class PrismaSubscribeRepository implements SubscribeRepository {
     );
   }
 
+  async findByAccountId(accountId: string): Promise<Subscribe[]> {
+    const subs = await prisma.subscribe.findMany({
+      where: {
+        accountId,
+      },
+    });
+
+    return subs.map(
+      (sub) =>
+        new Subscribe(
+          sub.id,
+          sub.price,
+          mapStatus[sub.status],
+          sub.accountId,
+          sub.productId,
+          sub.createdAt,
+          sub.updatedAt,
+          sub.expiredAt ?? undefined
+        )
+    );
+  }
+
   async create(subscribe: Subscribe): Promise<void> {
     await prisma.subscribe.create({
-      data: subscribe,
+      data: {
+        ...subscribe,
+      },
+    });
+  }
+
+  async update(subscribe: Subscribe): Promise<void> {
+    await prisma.subscribe.update({
+      data: {
+        ...subscribe,
+      },
+      where: {
+        id: subscribe.id,
+      },
     });
   }
 }

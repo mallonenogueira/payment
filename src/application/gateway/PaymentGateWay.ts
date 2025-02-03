@@ -1,3 +1,5 @@
+import { PaymentStatus } from "@/domain/entities/Payment";
+
 export interface CreatePaymentInput {
   subscribeId: string;
   installments: number;
@@ -18,6 +20,23 @@ export interface CreatePaymentOutput {
   id: string;
 }
 
+export interface GetPaymentInput {
+  id: string;
+}
+
+export interface GetPaymentOutput {
+  gateway: "MERCADO_PAGO";
+  installments: number;
+  status: PaymentStatus;
+  amount: number;
+  createdAt: Date;
+  updatedAt?: Date | null;
+  aprrovedAt?: Date | null;
+  subscribeId: string;
+  gatewayId?: string | null;
+}
+
 export interface PaymentGateway {
   createPaymnetUrl(input: CreatePaymentInput): Promise<CreatePaymentOutput>;
+  getPayment(input: GetPaymentInput): Promise<GetPaymentOutput>;
 }

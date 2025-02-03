@@ -14,12 +14,16 @@ import { CreateProductUseCase } from "@/application/usecases/CreateProductUseCas
 import { ProductController } from "@/presentation/controllers/ProductController";
 import { CreatePaymentLinkUseCase } from "@/application/usecases/CreatePaymentLinkUseCase";
 import { MercadoPagoGateway } from "@/infra/gateway/MercadoPagoGateway";
+import { MercadoPagoController } from "./presentation/controllers/MercadoPagoController";
+import { PrismaPaymentRepository } from "./infra/repositories/PrismaPaymentRepository";
+import { ProcessPaymentUseCase } from "./application/usecases/ProcessPaymentUseCase";
 
 function start() {
   const server = new ExpressServer();
 
   const mercadoPagoGateway = new MercadoPagoGateway();
 
+  const paymentRepository = new PrismaPaymentRepository();
   const productRepository = new PrismaProductRepository();
   const subscribeRepository = new PrismaSubscribeRepository();
   const accountRepository = new PrismaAccountRepository();
@@ -36,15 +40,26 @@ function start() {
     accountRepository,
     mercadoPagoGateway
   );
+  const processPaymentUseCase = new ProcessPaymentUseCase(
+    subscribeRepository,
+    productRepository,
+    paymentRepository
+  );
 
   new HealthController(server);
-  new AccountController(server, createAccountUseCase, accountRepository);
+  new AccountController(
+    server,
+    createAccountUseCase,
+    accountRepository,
+    subscribeRepository
+  );
   new ProductController(server, createProductUseCase, productRepository);
   new SubscribeController(
     server,
     createSubscribeUseCase,
     createPaymentLinkUseCase
   );
+  new MercadoPagoController(server, mercadoPagoGateway, processPaymentUseCase);
 
   server.listen(env.port);
 }

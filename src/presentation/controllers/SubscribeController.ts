@@ -14,7 +14,6 @@ export class SubscribeController {
   ) {
     server.post("/subscribe", this.create.bind(this));
     server.post("/subscribe/:id/link", this.createPaymentLink.bind(this));
-    server.post("/subscribe/:id/notification", this.paymentNotification.bind(this));
   }
 
   async create(ctx: HttpContext) {
@@ -30,9 +29,5 @@ export class SubscribeController {
     return this.createPaymentLinkUseCase.execute({
       subscribeId: ctx.params.id,
     });
-  }
-
-  async paymentNotification(ctx: HttpContext) {
-    console.log(ctx);
   }
 }
