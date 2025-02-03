@@ -14,14 +14,20 @@ export class CreatePaymentLinkUseCase {
   async execute(
     input: CreatePaymentLinkInput
   ): Promise<CreatePaymentLinkOutput> {
-    const subscription = await this.subscriptionRepository.findById(input.subscriptionId);
-    
+    const subscription = await this.subscriptionRepository.findById(
+      input.subscriptionId
+    );
+
     if (!subscription) {
       throw new Error("Inscrição não encontada.");
     }
-    
-    const product = await this.productRepository.findById(subscription.productId);
-    const account = await this.accountRepository.findById(subscription.accountId);
+
+    const product = await this.productRepository.findById(
+      subscription.productId
+    );
+    const account = await this.accountRepository.findById(
+      subscription.accountId
+    );
 
     if (!account) {
       throw new Error("Conta não encontada.");
@@ -30,6 +36,8 @@ export class CreatePaymentLinkUseCase {
     if (!product) {
       throw new Error("Produto não encontrado.");
     }
+
+    subscription.startPayment();
 
     const paymentUrl = await this.paymentGateway.createPaymnetUrl({
       customer: {
@@ -45,6 +53,8 @@ export class CreatePaymentLinkUseCase {
       },
       subscriptionId: subscription.id,
     });
+
+    this.subscriptionRepository.update(subscription);
 
     return paymentUrl;
   }

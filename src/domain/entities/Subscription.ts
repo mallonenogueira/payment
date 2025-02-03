@@ -42,6 +42,18 @@ export class Subscription {
     );
   }
 
+  startPayment() {
+    switch (this.status) {
+      case SubscriptionStatus.CREATED:
+        this.updatedAt = new Date();
+        this.status = SubscriptionStatus.PENDING;
+        return;
+      default:
+        throw new Error("Subscription can not be generate payment.");
+    }
+  }
+
+
   approve(productType?: ProductType) {
     switch (this.status) {
       case SubscriptionStatus.APPROVED:
