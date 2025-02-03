@@ -2,6 +2,7 @@ import { SubscriptionStatus } from "@prisma/client";
 import { Subscription } from "@/domain/entities/Subscription";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 import { ProductRepository } from "../repositories/ProductRepository";
+import { ValidationError } from "@/domain/errors/ValidationError";
 
 export class CreateSubscriptionUseCase {
   constructor(
@@ -13,11 +14,11 @@ export class CreateSubscriptionUseCase {
     const product = await this.productRepository.findById(input.productId);
 
     if (!product) {
-      throw new Error("Produto não encontrado.");
+      throw new ValidationError("Produto não encontrado.");
     }
 
     if (!product.active) {
-      throw new Error("Produto não se encontra mais ativo.");
+      throw new ValidationError("Produto não se encontra mais ativo.");
     }
 
     const subscription = Subscription.create(

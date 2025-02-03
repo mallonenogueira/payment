@@ -2,6 +2,7 @@ import { ProductRepository } from "../repositories/ProductRepository";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 import { PaymentRepository } from "../repositories/PaymentRepository";
 import { Payment, PaymentStatus } from "@/domain/entities/Payment";
+import { ValidationError } from "@/domain/errors/ValidationError";
 
 export class ProcessPaymentUseCase {
   constructor(
@@ -16,13 +17,13 @@ export class ProcessPaymentUseCase {
     );
 
     if (!subscription) {
-      throw new Error("Inscrição não encontada.");
+      throw new ValidationError("Inscrição não encontada.");
     }
 
     const product = await this.productRepository.findById(subscription.productId);
 
     if (!product) {
-      throw new Error("Produto não encontrado.");
+      throw new ValidationError("Produto não encontrado.");
     }
 
     const payment = Payment.create(

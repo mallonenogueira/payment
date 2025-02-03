@@ -1,4 +1,5 @@
 import { EntityMissingParams } from "../errors/EntityMissingParams";
+import { ValidationError } from "../errors/ValidationError";
 import { Id } from "../value-objects/Id";
 import { ProductType } from "./Product";
 
@@ -49,7 +50,7 @@ export class Subscription {
         this.status = SubscriptionStatus.PENDING;
         return;
       default:
-        throw new Error("Subscription can not be generate payment.");
+        throw new ValidationError("Subscription can not be generate payment.");
     }
   }
 
@@ -57,10 +58,10 @@ export class Subscription {
   approve(productType?: ProductType) {
     switch (this.status) {
       case SubscriptionStatus.APPROVED:
-        throw new Error("Subscription already approved.");
+        throw new ValidationError("Subscription already approved.");
       case SubscriptionStatus.CANCELED:
       case SubscriptionStatus.EXPIRED:
-        throw new Error("Subscription can not be approved.");
+        throw new ValidationError("Subscription can not be approved.");
       default:
         this.updatedAt = new Date();
         this.status = SubscriptionStatus.APPROVED;

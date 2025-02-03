@@ -1,6 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import { HttpHandler, HttpResponse, HttpServer } from "./HttpServer";
+import { expressErrorHandler } from "./ExpressErrorHandler";
 
 function handlerAdapter<T>(handler: HttpHandler<T>) {
   return async (
@@ -42,6 +43,7 @@ export class ExpressServer implements HttpServer {
     this.app.use(express.json());
     this.app.set("trust proxy", true);
     this.app.use("/api", this.router);
+    this.app.use(expressErrorHandler);
   }
 
   get<T>(path: string, handler: HttpHandler<T>): void {

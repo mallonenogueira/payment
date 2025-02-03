@@ -2,6 +2,7 @@ import { ProductRepository } from "../repositories/ProductRepository";
 import { PaymentGateway } from "../gateway/PaymentGateWay";
 import { AccountRepository } from "../repositories/AccountRepository";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
+import { ValidationError } from "@/domain/errors/ValidationError";
 
 export class CreatePaymentLinkUseCase {
   constructor(
@@ -19,7 +20,7 @@ export class CreatePaymentLinkUseCase {
     );
 
     if (!subscription) {
-      throw new Error("Inscrição não encontada.");
+      throw new ValidationError("Inscrição não encontada.");
     }
 
     const product = await this.productRepository.findById(
@@ -30,11 +31,11 @@ export class CreatePaymentLinkUseCase {
     );
 
     if (!account) {
-      throw new Error("Conta não encontada.");
+      throw new ValidationError("Conta não encontada.");
     }
 
     if (!product) {
-      throw new Error("Produto não encontrado.");
+      throw new ValidationError("Produto não encontrado.");
     }
 
     subscription.startPayment();
