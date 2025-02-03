@@ -17,10 +17,12 @@ import { MercadoPagoGateway } from "@/infra/gateway/MercadoPagoGateway";
 import { MercadoPagoController } from "./presentation/controllers/MercadoPagoController";
 import { PrismaPaymentRepository } from "./infra/repositories/PrismaPaymentRepository";
 import { ProcessPaymentUseCase } from "./application/usecases/ProcessPaymentUseCase";
+import { ResendMailService } from "./infra/services/ResendMailService";
 
 function start() {
   const server = new ExpressServer();
 
+  const mailService = new ResendMailService();
   const mercadoPagoGateway = new MercadoPagoGateway();
 
   const paymentRepository = new PrismaPaymentRepository();
@@ -32,7 +34,7 @@ function start() {
     subscribeRepository,
     productRepository
   );
-  const createAccountUseCase = new CreateAccountUseCase(accountRepository);
+  const createAccountUseCase = new CreateAccountUseCase(accountRepository, mailService);
   const createProductUseCase = new CreateProductUseCase(productRepository);
   const createPaymentLinkUseCase = new CreatePaymentLinkUseCase(
     subscribeRepository,
