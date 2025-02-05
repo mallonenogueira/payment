@@ -1,8 +1,6 @@
-export class ValidationError extends Error {
-  static readonly type = 'ValidationError';
+export class ValidationError {
+  static readonly type = "ValidationError";
   readonly type = ValidationError.type;
 
-  constructor(message: string) {
-    super(message);
-  }
+  constructor(readonly message: string) {}
 }

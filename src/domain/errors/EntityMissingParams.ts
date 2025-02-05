@@ -1,10 +1,7 @@
-export class EntityMissingParams extends Error {
-  static readonly type = 'EntityMissingParams';
+export class EntityMissingParams {
+  static readonly type = "EntityMissingParams";
   readonly type = EntityMissingParams.type;
-  readonly params: string[];
+  readonly message: string = "Parametros não encontrados.";
 
-  constructor(params: string[]) {
-    super("Parametros não encontrados.");
-    this.params = params;
-  }
+  constructor(readonly params: string[]) {}
 }

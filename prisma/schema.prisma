@@ -8,30 +8,68 @@ datasource db {
 }
 
 model Account {
-    id        String      @id @default(uuid())
-    email     String      @unique
-    name      String
-    document  String
-    createdAt DateTime    @default(now()) @map("created_at")
-    updatedAt DateTime    @updatedAt @map("updated_at")
+    id           String         @id @default(uuid())
+    email        String         @unique
+    name         String
+    document     String
+    logo         String?
+    createdAt    DateTime       @default(now()) @map("created_at")
+    updatedAt    DateTime       @updatedAt @map("updated_at")
     Subscription Subscription[]
-    Payment   Payment[]
+    Payment      Payment[]
+    Company      Company[]
+    User         User[]
 
     @@map("accounts")
 }
 
+model Company {
+    id        String   @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    accountId String   @map("account_id")
+    account   Account  @relation(fields: [accountId], references: [id])
+    users     User[]   @relation("users_on_companies")
+    active    Boolean
+
+    @@index([accountId])
+    @@map("companies")
+}
+
+model User {
+    id        String    @id @default(uuid())
+    email     String    @unique
+    password  String
+    name      String
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+    role      UserRole
+    accountId String    @map("account_id")
+    account   Account   @relation(fields: [accountId], references: [id])
+    companies Company[] @relation("users_on_companies")
+
+    @@index([accountId])
+    @@map("users")
+}
+
+enum UserRole {
+    ADMIN
+    USER
+}
+
 model Product {
-    id           String      @id @default(uuid())
+    id           String         @id @default(uuid())
     title        String
     description  String
     price        Int
     installments Int
     type         ProductType
     active       Boolean
-    createdAt    DateTime    @default(now()) @map("created_at")
-    updatedAt    DateTime    @updatedAt @map("updated_at")
-    Subscription    Subscription[]
-    
+    createdAt    DateTime       @default(now()) @map("created_at")
+    updatedAt    DateTime       @updatedAt @map("updated_at")
+    Subscription Subscription[]
+
     @@map("products")
 }
 
@@ -41,16 +79,16 @@ enum ProductType {
 }
 
 model Subscription {
-    id        String          @id @default(uuid())
+    id        String             @id @default(uuid())
     price     Int
     status    SubscriptionStatus @default(CREATED)
-    createdAt DateTime        @default(now()) @map("created_at")
-    updatedAt DateTime        @updatedAt @map("updated_at")
-    expiredAt DateTime?       @map("expired_at")
-    accountId String          @map("account_id")
-    account   Account         @relation(fields: [accountId], references: [id])
-    productId String          @map("product_id")
-    product   Product         @relation(fields: [productId], references: [id])
+    createdAt DateTime           @default(now()) @map("created_at")
+    updatedAt DateTime           @updatedAt @map("updated_at")
+    expiredAt DateTime?          @map("expired_at")
+    accountId String             @map("account_id")
+    account   Account            @relation(fields: [accountId], references: [id])
+    productId String             @map("product_id")
+    product   Product            @relation(fields: [productId], references: [id])
     Payment   Payment[]
 
     @@index([accountId])
@@ -66,19 +104,19 @@ enum SubscriptionStatus {
 }
 
 model Payment {
-    id           String        @id @default(uuid())
-    gateway      String?
-    gatewayId    String?
-    status       PaymentStatus @default(PENDING)
-    price        Int
-    installments Int
-    createdAt    DateTime      @default(now()) @map("created_at")
-    approvedAt   DateTime?     @map("approved_at")
-    updatedAt    DateTime      @updatedAt @map("updated_at")
-    accountId    String        @map("account_id")
-    account      Account       @relation(fields: [accountId], references: [id])
-    subscriptionId  String        @map("subscription_id")
-    subscription    Subscription     @relation(fields: [subscriptionId], references: [id])
+    id             String        @id @default(uuid())
+    gateway        String?
+    gatewayId      String?
+    status         PaymentStatus @default(PENDING)
+    price          Int
+    installments   Int
+    createdAt      DateTime      @default(now()) @map("created_at")
+    approvedAt     DateTime?     @map("approved_at")
+    updatedAt      DateTime      @updatedAt @map("updated_at")
+    accountId      String        @map("account_id")
+    account        Account       @relation(fields: [accountId], references: [id])
+    subscriptionId String        @map("subscription_id")
+    subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
 
     @@index([accountId])
     @@map("payments")

@@ -1,8 +1,10 @@
 import { EntityMissingParams } from "@/domain/errors/EntityMissingParams";
 import { EntityNotFound } from "@/domain/errors/EntityNotFound";
 import { ValidationError } from "@/domain/errors/ValidationError";
+import { UnauthorizedError } from "@/domain/errors/UnauthorizedError";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import express from "express";
+import { ForbiddenError } from "@/domain/errors/ForbiddenError";
 
 export function expressErrorHandler(
   error: any,
@@ -22,13 +24,35 @@ export function expressErrorHandler(
   }
 
   if (
+    error instanceof UnauthorizedError ||
+    ("type" in error && error.type === UnauthorizedError.type)
+  ) {
+    return res.status(401).send({
+      statusCode: 401,
+      type: UnauthorizedError.type,
+      message: error.message,
+    });
+  }
+
+  if (
+    error instanceof ForbiddenError ||
+    ("type" in error && error.type === ForbiddenError.type)
+  ) {
+    return res.status(403).send({
+      statusCode: 403,
+      type: ForbiddenError.type,
+      message: error.message,
+    });
+  }
+
+  if (
     error instanceof EntityNotFound ||
     ("type" in error && error.type === EntityNotFound.type)
   ) {
     return res.status(404).send({
       statusCode: 404,
       type: EntityNotFound.type,
-      message: error.message + error.entity,
+      message: error.message,
       entity: error.entity,
     });
   }
@@ -66,7 +90,8 @@ export function expressErrorHandler(
       statusCode: 400,
       type: "PCKRQClientError",
       message: "Erro ao realizar operação.",
-      modelName: error?.meta?.modelName,
+      modelName: error.meta?.modelName,
+      target: error.meta?.target,
       code: error.code,
     });
   }

@@ -11,6 +11,9 @@
         "debug": "nodemon -e ts --exec \"node --inspect --require ts-node/register src/index.ts\"",
         "test": "vitest watch"
     },
+    "prisma": {
+        "seed": "ts-node prisma/seeds/seed.ts"
+    },
     "license": "ISC",
     "dependencies": {
         "@aws-sdk/client-s3": "^3.627.0",

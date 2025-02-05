@@ -1,16 +1,23 @@
 import { Account } from "@/domain/entities/Account";
 import { AccountRepository } from "@/application/repositories/AccountRepository";
-import { prisma } from "./PrismaClient";
+import { Transaction } from "@/application/transaction/Transaction";
+import { PrismaContext } from "../transaction/PrismaTransactionManager";
 
 export class PrismaAccountRepository implements AccountRepository {
+  constructor(private prisma: PrismaContext) {}
+
+  with(transaction: Transaction<PrismaContext>) {
+    return new PrismaAccountRepository(transaction.getContext());
+  }
+
   async create(account: Account): Promise<void> {
-    await prisma.account.create({
+    await this.prisma.account.create({
       data: account,
     });
   }
 
   async findAll(): Promise<Account[]> {
-    const accounts = await prisma.account.findMany();
+    const accounts = await this.prisma.account.findMany();
     return accounts.map(
       (prismaAccount) =>
         new Account(
@@ -23,7 +30,7 @@ export class PrismaAccountRepository implements AccountRepository {
   }
 
   async findById(id: string): Promise<Account | null> {
-    const prismaAccount = await prisma.account.findUnique({
+    const prismaAccount = await this.prisma.account.findUnique({
       where: {
         id: id,
       },

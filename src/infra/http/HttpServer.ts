@@ -30,6 +30,12 @@ export class HttpResponseOk<T> extends HttpResponse<T> {
   }
 }
 
+export class HttpResponseNoContent extends HttpResponse<undefined> {
+  constructor() {
+    super(204, undefined);
+  }
+}
+
 export class HttpResponseCreated<T> extends HttpResponse<T> {
   constructor(public _data: T) {
     super(201, _data);
@@ -39,6 +45,7 @@ export class HttpResponseCreated<T> extends HttpResponse<T> {
 export const HttpResponseResolver = {
   created: <T>(d: T) => new HttpResponseCreated(d),
   ok: <T>(d: T) => new HttpResponseOk(d),
+  noContent: <T>(d: T) => new HttpResponseNoContent(),
 };
 
 export type HttpHandler<T, R extends HttpContext = HttpContext> = (
