@@ -1,5 +1,6 @@
 import express from "express";
 import helmet from "helmet";
+import cors from "cors";
 import { HttpHandler, HttpResponse, HttpServer } from "./HttpServer";
 import { expressErrorHandler } from "./ExpressErrorHandler";
 
@@ -39,6 +40,11 @@ export class ExpressServer implements HttpServer {
   constructor(app?: express.Application) {
     this.app = app ?? express();
     this.router = express.Router();
+    this.app.use(
+      cors({
+        origin: "*",
+      })
+    );
     this.app.use(helmet());
     this.app.use(express.json());
     this.app.set("trust proxy", true);

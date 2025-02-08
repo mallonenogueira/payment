@@ -6,6 +6,7 @@ export interface CompanyRepository extends WithTransaction<CompanyRepository> {
   update(company: Company): Promise<void>;
   findById(id: string): Promise<Company | null>;
   findByAccountId(id: string): Promise<Company[]>;
+  findActiveByUserId(userId: string): Promise<Company[]>;
   addUsers(
     company: Pick<Company, "id" | "accountId">,
     users: { id: string }[]

@@ -14,10 +14,15 @@ export class GenerateJwtPayloadUseCase {
 }
 
 export interface AuthInput {
+  id: string;
   email: string;
   name: string;
   role: UserRole;
   accountId: string;
+  companies: {
+    id: string;
+    name: string;
+  }[];
 }
 
 export interface AuthOutput {

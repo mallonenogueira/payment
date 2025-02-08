@@ -14,7 +14,7 @@ import { CreateProductUseCase } from "@/application/usecases/CreateProductUseCas
 import { ProductController } from "@/presentation/controllers/ProductController";
 import { CreatePaymentLinkUseCase } from "@/application/usecases/CreatePaymentLinkUseCase";
 import { MercadoPagoGateway } from "@/infra/gateway/MercadoPagoGateway";
-import { MercadoPagoController } from "./presentation/controllers/MercadoPagoController";
+import { MercadoPagoController } from "./presentation/webhooks/MercadoPagoController";
 import { PrismaPaymentRepository } from "./infra/repositories/PrismaPaymentRepository";
 import { ProcessPaymentUseCase } from "./application/usecases/ProcessPaymentUseCase";
 import { ResendMailService } from "./infra/services/ResendMailService";
@@ -66,7 +66,6 @@ function start() {
     userRepository,
     mailService
   );
-
   const createUserUseCase = new CreateUserUseCase(userRepository);
   const updateUserUseCase = new UpdateUserUseCase(userRepository);
   const createCompanyUseCase = new CreateCompanyUseCase(companyRepository);
@@ -83,18 +82,11 @@ function start() {
     productRepository,
     paymentRepository
   );
-  const authUseCase = new AuthUseCase(userRepository);
+  const authUseCase = new AuthUseCase(userRepository, companyRepository);
   const generateJwtPayloadUseCase = new GenerateJwtPayloadUseCase();
 
   new HealthController(server);
-  new AccountController(
-    server,
-    createAccountUseCase,
-    accountRepository,
-    companyRepository,
-    userRepository,
-    subscriptionRepository
-  );
+  new AccountController(server, createAccountUseCase, accountRepository);
   new CompanyController(
     server,
     createCompanyUseCase,
@@ -114,7 +106,8 @@ function start() {
   new SubscriptionController(
     server,
     createSubscriptionUseCase,
-    createPaymentLinkUseCase
+    createPaymentLinkUseCase,
+    subscriptionRepository
   );
   new MercadoPagoController(server, mercadoPagoGateway, processPaymentUseCase);
   new AuthController(server, authUseCase, generateJwtPayloadUseCase);

@@ -91,4 +91,27 @@ export class PrismaCompanyRepository implements CompanyRepository {
       },
     });
   }
+
+  async findActiveByUserId(userId: string): Promise<Company[]> {
+    const prismaCompanies = await this.prisma.company.findMany({
+      where: {
+        active: true,
+        users: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    return prismaCompanies.map(
+      (prismaCompany) =>
+        new Company(
+          prismaCompany.id,
+          prismaCompany.accountId,
+          prismaCompany.name,
+          prismaCompany.active
+        )
+    );
+  }
 }

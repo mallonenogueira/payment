@@ -29,8 +29,13 @@ export class DecodeJwtPayloadUseCase {
 }
 
 export interface AuthOutput {
+  id: string;
   email: string;
   name: string;
   role: UserRole;
   accountId: string;
+  companies: {
+    id: string;
+    name: string;
+  }[];
 }

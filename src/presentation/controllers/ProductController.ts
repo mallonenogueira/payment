@@ -6,6 +6,7 @@ import {
 import { CreateProductUseCase } from "@/application/usecases/CreateProductUseCase";
 import { ProductRepository } from "@/application/repositories/ProductRepository";
 import { ResponseWrapper } from "../wrapper/ResponseWrapper";
+import { SessionValidation } from "@/infra/auth/SessionValidation";
 
 export class ProductController {
   constructor(
@@ -18,6 +19,8 @@ export class ProductController {
   }
 
   async create(ctx: HttpContext) {
+    await new SessionValidation().isApplicationAdmin().auth(ctx);
+
     return this.createProductUseCase
       .execute({
         title: ctx.body.title,
@@ -31,6 +34,6 @@ export class ProductController {
   }
 
   async findActive() {
-    return this.productRepository.listActive().then(ResponseWrapper.create)
+    return this.productRepository.listActive().then(ResponseWrapper.create);
   }
 }
