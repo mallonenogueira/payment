@@ -1,7 +1,7 @@
 import { ProductRepository } from "../repositories/ProductRepository";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 import { PaymentRepository } from "../repositories/PaymentRepository";
-import { Payment, PaymentStatus } from "@/domain/entities/Payment";
+import { Payment, PaymentStatus } from "@/domain/entities/payment/Payment";
 import { ValidationError } from "@/domain/errors/ValidationError";
 
 export class ProcessPaymentUseCase {

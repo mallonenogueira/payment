@@ -8,7 +8,7 @@ import {
 import MercadoPagoConfig, { Payment, Preference } from "mercadopago";
 import { env } from "../configuration/env";
 import { Id } from "@/domain/value-objects/Id";
-import { PaymentStatus } from "@/domain/entities/Payment";
+import { PaymentStatus } from "@/domain/entities/payment/Payment";
 
 export class MercadoPagoGateway implements PaymentGateway {
   constructor(

@@ -8,30 +8,34 @@ datasource db {
 }
 
 model Account {
-    id           String         @id @default(uuid())
-    email        String         @unique
-    name         String
-    document     String
-    logo         String?
-    createdAt    DateTime       @default(now()) @map("created_at")
-    updatedAt    DateTime       @updatedAt @map("updated_at")
-    Subscription Subscription[]
-    Payment      Payment[]
-    Company      Company[]
-    User         User[]
+    id            String          @id @default(uuid())
+    email         String          @unique
+    name          String
+    document      String
+    logo          String?
+    createdAt     DateTime        @default(now()) @map("created_at")
+    updatedAt     DateTime        @updatedAt @map("updated_at")
+    Subscription  Subscription[]
+    Payment       Payment[]
+    Company       Company[]
+    User          User[]
+    Ceremony      Ceremony[]
+    HonoredPerson HonoredPerson[]
+    Address       Address[]
 
     @@map("accounts")
 }
 
 model Company {
-    id        String   @id @default(uuid())
+    id        String     @id @default(uuid())
+    createdAt DateTime   @default(now()) @map("created_at")
+    updatedAt DateTime   @updatedAt @map("updated_at")
     name      String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    accountId String   @map("account_id")
-    account   Account  @relation(fields: [accountId], references: [id])
-    users     User[]   @relation("users_on_companies")
+    accountId String     @map("account_id")
+    account   Account    @relation(fields: [accountId], references: [id])
+    users     User[]     @relation("users_on_companies")
     active    Boolean
+    Ceremony  Ceremony[]
 
     @@index([accountId])
     @@map("companies")
@@ -39,11 +43,11 @@ model Company {
 
 model User {
     id        String    @id @default(uuid())
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
     email     String    @unique
     password  String
     name      String
-    createdAt DateTime  @default(now()) @map("created_at")
-    updatedAt DateTime  @updatedAt @map("updated_at")
     role      UserRole
     accountId String    @map("account_id")
     account   Account   @relation(fields: [accountId], references: [id])
@@ -58,16 +62,18 @@ enum UserRole {
     USER
 }
 
+// -------------------- MODULO PAGAMENTOS
+
 model Product {
     id           String         @id @default(uuid())
+    createdAt    DateTime       @default(now()) @map("created_at")
+    updatedAt    DateTime       @updatedAt @map("updated_at")
     title        String
     description  String
     price        Int
     installments Int
     type         ProductType
     active       Boolean
-    createdAt    DateTime       @default(now()) @map("created_at")
-    updatedAt    DateTime       @updatedAt @map("updated_at")
     Subscription Subscription[]
 
     @@map("products")
@@ -80,10 +86,10 @@ enum ProductType {
 
 model Subscription {
     id        String             @id @default(uuid())
-    price     Int
-    status    SubscriptionStatus @default(CREATED)
     createdAt DateTime           @default(now()) @map("created_at")
     updatedAt DateTime           @updatedAt @map("updated_at")
+    price     Int
+    status    SubscriptionStatus @default(CREATED)
     expiredAt DateTime?          @map("expired_at")
     accountId String             @map("account_id")
     account   Account            @relation(fields: [accountId], references: [id])
@@ -126,4 +132,62 @@ enum PaymentStatus {
     PENDING
     APPROVED
     CANCELED
+}
+
+// -------------------- MODULO CERIMONIAS
+
+model Ceremony {
+    id            String          @id @default(uuid())
+    publicId      Int             @unique @default(autoincrement()) @map("public_id")
+    createdAt     DateTime        @default(now()) @map("created_at")
+    updatedAt     DateTime        @updatedAt @map("updated_at")
+    startDate     DateTime?       @map("start_date")
+    endDate       DateTime?       @map("end_date")
+    tributeDate   DateTime?       @map("tribute_date")
+    published     Boolean         @default(false)
+    description   String?
+    accountId     String          @map("account_id")
+    companyId     String          @map("company_id")
+    account       Account         @relation(fields: [accountId], references: [id])
+    company       Company         @relation(fields: [companyId], references: [id])
+    HonoredPerson HonoredPerson[]
+
+    @@index([accountId])
+    @@map("ceremonies")
+}
+
+model HonoredPerson {
+    id         String    @id @default(uuid())
+    createdAt  DateTime  @default(now()) @map("created_at")
+    updatedAt  DateTime  @updatedAt @map("updated_at")
+    name       String
+    history    String?
+    imageId    String?   @map("image_id")
+    ceremonyId String    @map("ceremony_id")
+    ceremony   Ceremony  @relation(fields: [ceremonyId], references: [id])
+    accountId  String    @map("account_id")
+    account    Account   @relation(fields: [accountId], references: [id])
+    birthDate  DateTime? @map("birth_date")
+    deathDate  DateTime? @map("death_Date")
+
+    @@index([accountId])
+    @@map("honored_person")
+}
+
+model Address {
+    id         String   @id @default(uuid())
+    createdAt  DateTime @default(now()) @map("created_at")
+    updatedAt  DateTime @updatedAt @map("updated_at")
+    zipCode    String   @map("zip_code")
+    name       String
+    address    String
+    city       String
+    number     String
+    state      String
+    complement String?
+    accountId  String   @map("account_id")
+    account    Account  @relation(fields: [accountId], references: [id])
+
+    @@index([accountId])
+    @@map("addresses")
 }

@@ -1,6 +1,6 @@
 import { prisma } from "./PrismaClient";
 import { ProductRepository } from "@/application/repositories/ProductRepository";
-import { Product, ProductType } from "@/domain/entities/Product";
+import { Product, ProductType } from "@/domain/entities/payment/Product";
 import { ProductType as PrismaProductType } from "@prisma/client";
 
 const mapProductType = {

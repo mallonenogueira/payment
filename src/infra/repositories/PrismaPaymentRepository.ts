@@ -1,6 +1,6 @@
 import { prisma } from "./PrismaClient";
 import { PaymentRepository } from "@/application/repositories/PaymentRepository";
-import { Payment, PaymentStatus } from "@/domain/entities/Payment";
+import { Payment, PaymentStatus } from "@/domain/entities/payment/Payment";
 
 const mapStatus = {
   PENDING: PaymentStatus.PENDING,

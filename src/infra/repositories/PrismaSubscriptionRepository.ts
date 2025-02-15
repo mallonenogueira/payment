@@ -1,6 +1,6 @@
 import { prisma } from "./PrismaClient";
 import { SubscriptionRepository } from "@/application/repositories/SubscriptionRepository";
-import { Subscription, SubscriptionStatus } from "@/domain/entities/Subscription";
+import { Subscription, SubscriptionStatus } from "@/domain/entities/payment/Subscription";
 
 const mapStatus = {
   CREATED: SubscriptionStatus.CREATED,

@@ -1,6 +1,6 @@
-import { EntityMissingParams } from "../errors/EntityMissingParams";
-import { ValidationError } from "../errors/ValidationError";
-import { Id } from "../value-objects/Id";
+import { EntityMissingParams } from "../../errors/EntityMissingParams";
+import { ValidationError } from "../../errors/ValidationError";
+import { Id } from "../../value-objects/Id";
 import { ProductType } from "./Product";
 
 export enum SubscriptionStatus {

@@ -1,5 +1,5 @@
 import { SubscriptionStatus } from "@prisma/client";
-import { Subscription } from "@/domain/entities/Subscription";
+import { Subscription } from "@/domain/entities/payment/Subscription";
 import { SubscriptionRepository } from "../repositories/SubscriptionRepository";
 import { ProductRepository } from "../repositories/ProductRepository";
 import { ValidationError } from "@/domain/errors/ValidationError";

@@ -1,5 +1,5 @@
-import { EntityMissingParams } from "../errors/EntityMissingParams";
-import { Id } from "../value-objects/Id";
+import { EntityMissingParams } from "../../errors/EntityMissingParams";
+import { Id } from "../../value-objects/Id";
 
 export enum ProductType {
   MONTH = "MONTH",

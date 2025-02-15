@@ -1,4 +1,4 @@
-import { PaymentStatus } from "@/domain/entities/Payment";
+import { PaymentStatus } from "@/domain/entities/payment/Payment";
 
 export interface CreatePaymentInput {
   subscriptionId: string;
